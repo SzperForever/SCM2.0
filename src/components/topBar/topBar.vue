@@ -1,8 +1,8 @@
 <template>
-  <Header class="header">
+  <Header :class="headerShadow">
     <Row>
       <Col span="3">
-        <logo></logo>
+        <router-link to="/"><logo></logo></router-link>
       </Col>
       <Col span="5" offset="1">
         <global-search></global-search>
@@ -24,24 +24,33 @@
     components: {UserPanel, GlobalSearch, Logo},
     data() {
       return {
+        shadow: {
+          zIndex: '20',
+          webkitBoxShadow: '3px 13px 32px 0 rgba(0, 0, 0, 0.65)',
+          boxShadow: '3px 13px 32px 43px rgba(0, 0, 0, 0.35)'
+        }
+      }
+    },
+    computed: {
+      headerShadow() {
+        if (this.$route.path === '\\') {
+          return this.shadow
+        } else {
+          return {}
+        }
       }
     }
   }
 </script>
 
 <style scoped>
-  .header{
-    z-index: 20;
-    -webkit-box-shadow: 3px 13px 32px 0 rgba(0,0,0,0.65);
-    box-shadow: 3px 13px 32px 43px rgba(0,0,0,0.35);
+  .userPanel {
+    position: absolute;
+    right: 0;
+    margin-right: -135px;
   }
 
-.userPanel{
-  position: absolute;
-  right: 0;
-  margin-right: -135px;
-}
-  .userPanel>>>ul{
+  .userPanel >>> ul {
 
   }
 </style>

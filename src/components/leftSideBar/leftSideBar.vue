@@ -1,48 +1,99 @@
 <template>
-  <Menu active-name="1-2" :open-names="['1']">
-    <Submenu name="1">
-      <template slot="title">
-        <Icon type="ios-analytics"></Icon>
-        Navigation One
-      </template>
-      <MenuGroup title="Item 1">
-        <MenuItem name="1-1">Option 1</MenuItem>
-        <MenuItem name="1-2">Option 2</MenuItem>
-      </MenuGroup>
-      <MenuGroup title="Item 2">
-        <MenuItem name="1-3">Option 3</MenuItem>
-        <MenuItem name="1-4">Option 4</MenuItem>
-      </MenuGroup>
-    </Submenu>
-    <Submenu name="2">
-      <template slot="title">
-        <Icon type="ios-filing"></Icon>
-        Navigation Two
-      </template>
-      <MenuItem name="2-1">Option 5</MenuItem>
-      <MenuItem name="2-2">Option 6</MenuItem>
-      <Submenu name="3">
-        <template slot="title">Submenu</template>
-        <MenuItem name="3-1">Option 7</MenuItem>
-        <MenuItem name="3-2">Option 8</MenuItem>
+  <div>
+    <Menu active-name="1-2" :open-names="['1','2','3']" v-on:on-select="select">
+      <Submenu name="1">
+        <template slot="title">
+          <Icon type="ios-analytics"></Icon>
+          Department
+        </template>
+        <MenuItem v-for="department in departments" :key="department.departmentId" :name="department.departmentName">
+          <Icon :type="department.icon" :color="department.iconColor"></Icon>
+          {{department.departmentName}}
+        </MenuItem>
       </Submenu>
-    </Submenu>
-    <Submenu name="4">
-      <template slot="title">
-        <Icon type="ios-gear"></Icon>
-        Navigation Three
-      </template>
-      <MenuItem name="4-1">Option 9</MenuItem>
-      <MenuItem name="4-2">Option 10</MenuItem>
-      <MenuItem name="4-3">Option 11</MenuItem>
-      <MenuItem name="4-4">Option 12</MenuItem>
-    </Submenu>
-  </Menu>
+      <Submenu name="2" v-if="showCatalog">
+        <template slot="title">
+          <Icon type="ios-filing"></Icon>
+          Catalogs
+        </template>
+        <MenuItem v-for="catalog in catalogs" :key="catalog.catalogId" :name="catalog.catalogName">
+          <Icon :type="catalog.icon" :color="catalog.iconColor"></Icon>
+          {{catalog.catalogName}}
+        </MenuItem>
+      </Submenu>
+      <Submenu name="3" v-if="!showCatalog">
+        <template slot="title">
+          <Icon type="ios-filing"></Icon>
+          Doc Types
+        </template>
+        <MenuItem v-for="docType in documentType" :key="docType.docTypeId" :name="docType.docTypeName">
+          <Icon :type="docType.icon" :color="docType.iconColor"></Icon>
+          {{docType.docTypeName}}
+        </MenuItem>
+      </Submenu>
+    </Menu>
+  </div>
 </template>
 
 <script>
+  import Bus from '../Bus/Bus'
+
   export default {
-    name: "leftSideBar"
+    name: "leftSideBar",
+    data() {
+      return {
+        departments: [],
+        departmentsLoading: true,
+        catalogs: [],
+        catalogsLoading: true,
+        documentType : [],
+        documentTypeLoading : true
+      }
+    },
+    computed: {
+      showCatalog(){
+        if(this.$route.path.indexOf('DocumentCenter') == -1){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+    },
+    methods: {
+      select(name){
+          this.switchDepartment(name);
+      },
+      loadDepartment() {
+        this.$http.get('/getDepartments.form').then((response) => {
+          this.departments = response.data;
+          this.departmentsLoading = false;
+        });
+      },
+      loadCatalogs() {
+        this.$http.get('/getCatagory.form').then((response) => {
+          this.catalogs = response.data;
+          this.catalogsLoading = false;
+        })
+      },
+      loadDocumentType() {
+        this.$http.get('/getDocType.form').then((response) => {
+          this.documentType = response.data;
+          this.documentTypeLoading = false;
+        })
+      },
+      loadAll() {
+        this.loadDepartment();
+        this.loadCatalogs();
+        this.loadDocumentType();
+      },
+      switchDepartment(depar){
+        Bus.$emit('switchDepartment',depar);
+      }
+    },
+    mounted() {
+      this.loadAll();
+    }
   }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <Carousel  autoplay-speed="1900" loop :height="430" collapsible="false" hide-trigger dots="outside">
+  <Carousel autoplay :autoplay-speed="1900" loop :height="430" collapsible="false" hide-trigger dots="outside">
     <CarouselItem :style="[carouseItemStyle,appCenterStyle]">
       <router-link to="/AppCenter" class="routeLink">
         App Center

@@ -3,14 +3,16 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
-
+import FlatSurfaceShader from 'vue-flat-surface-shader'
 import HomePage from "./components/mainContent/homePage/homePage";
 import AppCenter from "./components/mainContent/appCenter/appCenter"
+import DocumentCenter from "./components/mainContent/documentCenter/documentCenter"
 
+Vue.use(FlatSurfaceShader);
 var axios = require('axios');
 Vue.prototype.$http = axios.create({
-  // baseURL: 'http://123.207.49.64:8080/SCM'
-  baseURL: 'http://127.0.0.1:8080'
+  baseURL: 'http://123.207.49.64:8080/SCM'
+  // baseURL: 'http://127.0.0.1:8080'
   // baseURL: 'http://cnshah0mrosql01:8080'
 });
 
@@ -22,6 +24,7 @@ Vue.use(iView);
 const routes = [
   {path: "/", component: HomePage},
   {path: '/AppCenter', component: AppCenter},
+  {path: '/DocumentCenter', component: DocumentCenter}
 ];
 
 // 3. 创建 router 实例，然后传 `routes` 配置
