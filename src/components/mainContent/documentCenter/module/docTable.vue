@@ -26,6 +26,7 @@
     },
     methods: {
       loadTableData() {
+        console.log("Called");
         this.$http.get('/getDocuments.form').then((response) => {
           this.documentData = response.data;
           this.documentDataLoading = false;
@@ -33,7 +34,10 @@
       },
       loadTableDataWithDepar(depar) {
         this.documentDataLoading = true;
-        this.$http.get('/getDocuments.form').then((response) => {
+        this.$http.post('/getDocByDepart.form',{
+          name: depar
+        }).then((response) => {
+          console.log(depar, response.data);
           this.documentData = response.data;
           this.documentDataLoading = false;
         })
@@ -45,7 +49,8 @@
     },
     mounted() {
       this.loadTableData();
-      Bus.$on('switchDepartment', (depar) => {
+
+      Bus.$on('switchDoc', (depar) => {
         this.loadTableDataWithDepar(depar);
       });
     }

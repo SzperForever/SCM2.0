@@ -9,10 +9,10 @@
           <BreadcrumbItem to="/">Home</BreadcrumbItem>
           <BreadcrumbItem to="">App Center</BreadcrumbItem>
         </Breadcrumb>
-        <app-filter></app-filter>
+        <app-filter :loading="loading"></app-filter>
       </Card>
-        <app-list v-if="urlsData" class="appList" :urls="urlsData" :appCardLoading="loading">
-        </app-list>
+      <app-list v-if="urls" class="appList" :urls="urls" :appCardLoading="loading">
+      </app-list>
     </Content>
   </Layout>
 </template>
@@ -29,24 +29,51 @@
     components: {AppList, AppCard, AppFilter, LeftSideBar},
     data() {
       return {
-        urlsData: undefined,
-        loading : true
+        urls: {
+
+        },
+        loading: true
       }
     },
     methods: {},
     mounted() {
       this.$http.get('/getUrl.form').then((response) => {
-        this.urlsData = response.data;
+        this.urls= response.data;
         this.loading = false;
       });
-      Bus.$on('switchDepartment', function (depar) {
+
+      Bus.$on('switchApp', (depar) => {
         this.loading = true;
-        this.$http.post('/getUrlByCata.form', {
-          name: depar
-        }).then((response) => {
-          this.urlsData = response.data;
-          this.loading = false;
-        })
+        $('.segment').dimmer('show');
+        if (depar === "Planning" || depar === "Purchasing" || depar === "MRO" || depar === "InventoryControl" || depar === "All") {
+          if(depar === "All"){
+            this.$http.get('/getUrl.form').then((response) => {
+              this.urls = response.data;
+              this.loading = false;
+              $('.segment').dimmer('hide');
+            });
+          }
+          else {
+            this.loading = true;
+            this.$http.post('/getUrlByDepart.form', {
+              name: depar
+            }).then((response) => {
+              this.urls = response.data;
+              this.loading = false;
+              $('.segment').dimmer('hide');
+            })
+          }
+        }
+        else {
+          this.loading = true;
+          this.$http.post('/getUrlByCata.form', {
+            name: depar
+          }).then((response) => {
+            this.urls = response.data;
+            this.loading = false;
+            $('.segment').dimmer('hide');
+          })
+        }
       })
     }
   }

@@ -61,7 +61,6 @@
       },
       visiable: function (name) {
         if (this.chart == undefined) {
-          console.log('false');
           return false;
         }
         else {
@@ -72,7 +71,6 @@
       }
     },
     mounted() {
-      console.log(this.chart)
     }
   }
 </script>

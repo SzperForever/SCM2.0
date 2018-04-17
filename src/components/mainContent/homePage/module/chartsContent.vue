@@ -8,7 +8,7 @@
       <chart-card v-if="chartD" :chart="chartD"></chart-card>
       <chart-card v-if="chartE" :chart="chartE"></chart-card>
       <chart-card v-if="chartF" :chart="chartF"></chart-card>
-      <chart-card v-if="chartG" :chart="chartG"></chart-card>
+      <!--<chart-card v-if="chartG" :chart="chartG"></chart-card>-->
     </div>
   </Content>
 </template>

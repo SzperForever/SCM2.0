@@ -11,7 +11,7 @@
           {{department.departmentName}}
         </MenuItem>
       </Submenu>
-      <Submenu name="2" v-if="showCatalog">
+      <Submenu name="2" v-if="!isInDoc">
         <template slot="title">
           <Icon type="ios-filing"></Icon>
           Catalogs
@@ -21,7 +21,7 @@
           {{catalog.catalogName}}
         </MenuItem>
       </Submenu>
-      <Submenu name="3" v-if="!showCatalog">
+      <Submenu name="3" v-if="isInDoc">
         <template slot="title">
           <Icon type="ios-filing"></Icon>
           Doc Types
@@ -46,23 +46,23 @@
         departmentsLoading: true,
         catalogs: [],
         catalogsLoading: true,
-        documentType : [],
-        documentTypeLoading : true
+        documentType: [],
+        documentTypeLoading: true
       }
     },
     computed: {
-      showCatalog(){
-        if(this.$route.path.indexOf('DocumentCenter') == -1){
-          return true;
-        }
-        else{
+      isInDoc() {
+        if (this.$route.path.indexOf('DocumentCenter') == -1) {
           return false;
+        }
+        else {
+          return true;
         }
       }
     },
     methods: {
-      select(name){
-          this.switchDepartment(name);
+      select(name) {
+        this.switch(name);
       },
       loadDepartment() {
         this.$http.get('/getDepartments.form').then((response) => {
@@ -87,8 +87,22 @@
         this.loadCatalogs();
         this.loadDocumentType();
       },
-      switchDepartment(depar){
-        Bus.$emit('switchDepartment',depar);
+      inDocPage(){
+        if (this.$route.path.indexOf('DocumentCenter') == -1) {
+          return false;
+        }
+        else {
+          return true;
+        }
+      },
+      switch(depar) {
+        if (this.inDocPage()) {
+          Bus.$emit('switchDoc', depar);
+        }
+        else {
+          Bus.$emit('switchApp', depar);
+        }
+
       }
     },
     mounted() {

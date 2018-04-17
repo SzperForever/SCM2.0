@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="ui blurring segment">
-      <div class="ui dimmer" id="loader">
+      <div class="ui" id="loader">
         <div class="content">
-          <div class="top fixed">
-            <h2 class="ui inverted icon header">
+          <div class="top fixed center">
+            <h2 class="ui icon header">
               <div class="ui active">
-                <div class="ui text loader">加载中</div>
+                <div class="ui text loader" style="color: #000!important;">加载中</div>
               </div>
             </h2>
           </div>
@@ -26,26 +26,19 @@
 
   export default {
     name: "appList",
-    components: {AppCard, PulseLoader},
-    props: ['urls','appCardLoading'],
+    components: {AppCard},
+    props: ['urls', 'appCardLoading'],
     data() {
       return {}
     },
-    watch : {
-        urls(){
-          console.log("url change")
-        }
-    },
-    mounted() {
-      // this.$http.get('getUrl.form').then((response) => {
-      //   this.urls = response.data;
-      // });
+    watch: {
+
     }
   }
 </script>
 
 <style scoped>
-  #loader>>>.loader{
+  #loader >>> .loader {
     top: 100px;
   }
 </style>

@@ -5,7 +5,9 @@
       </div>
       <div class="content">
         <div class="ui buttons" style="width: 100%">
-          <button v-for="letter in letters" class="ui button" @click="click_button(letter,$event)">{{letter}}</button>
+          <button v-if="!loading" v-for="letter in letters" :class="['ui','button',{active : isActive(letter)}]"
+                  @click="click_button(letter,$event)">{{letter}}
+          </button>
         </div>
       </div>
     </div>
@@ -15,12 +17,34 @@
 <script>
   export default {
     name: "appFilter",
+    props: ['loading'],
     data() {
       return {
         letters: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
       }
     },
+    computed: {
+      Active() {
+        console.log();
+      }
+    },
     methods: {
+      isActive(letter) {
+        if (this.existApp(letter) === true) {
+          console.log(letter, "ACTIVE");
+          return true;
+        }
+        return false;
+      },
+      existApp(letter) {
+        $('.appList').find('.header>a').each(function () {
+          if ($(this).text().slice(0, 1) === letter) {
+            console.log("True");
+            return true;
+          }
+        });
+        return false;
+      },
       click_button(key) {
         this.toggle_button(event.currentTarget)
       },
@@ -34,7 +58,7 @@
       },
       toggle_button($object) {
         if (this.hasClass($object, 'active')) {
-          this.removeClass($object,'active')
+          this.removeClass($object, 'active')
         }
         else {
           $object.className += " " + 'active';
